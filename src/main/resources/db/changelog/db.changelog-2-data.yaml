@@ -1,0 +1,203 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-sample-data
+      author: antonio
+      context: development
+      changes:
+
+        - insert:
+            tableName: clients
+            columns:
+              - column: { name: id, value: 11111111-1111-1111-1111-111111111111 }
+              - column: { name: name, value: João Silva }
+              - column: { name: email, value: joao@example.com }
+              - column: { name: phone, value: 48999990001 }
+
+        - insert:
+            tableName: clients
+            columns:
+              - column: { name: id, value: 22222222-2222-2222-2222-222222222222 }
+              - column: { name: name, value: Maria Oliveira }
+              - column: { name: email, value: maria@example.com }
+              - column: { name: phone, value: 48999990002 }
+
+        - insert:
+            tableName: addresses
+            columns:
+              - column: { name: id, valueComputed: uuid_generate_v4() }
+              - column: { name: client_id, value: 11111111-1111-1111-1111-111111111111 }
+              - column: { name: rua, value: Rua A }
+              - column: { name: numero, value: "123" }
+              - column: { name: cidade, value: Florianópolis }
+              - column: { name: estado, value: SC }
+              - column: { name: cep, value: 88000-000 }
+
+        - insert:
+            tableName: addresses
+            columns:
+              - column: { name: id, valueComputed: uuid_generate_v4() }
+              - column: { name: client_id, value: 22222222-2222-2222-2222-222222222222 }
+              - column: { name: rua, value: Rua B }
+              - column: { name: numero, value: "456" }
+              - column: { name: cidade, value: São José }
+              - column: { name: estado, value: SC }
+              - column: { name: cep, value: 88100-000 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: id, value: aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa }
+              - column: { name: name, value: Notebook Dell }
+              - column: { name: description, value: Inspiron 15 com 16GB RAM }
+              - column: { name: price, valueNumeric: 4200.00 }
+              - column: { name: stock_quantity, valueNumeric: 10 }
+              - column: { name: category, value: Informática }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: id, value: aaaaaaa2-aaaa-aaaa-aaaa-aaaaaaaaaaaa }
+              - column: { name: name, value: Smartphone Samsung }
+              - column: { name: description, value: Galaxy S21 }
+              - column: { name: price, valueNumeric: 3500.00 }
+              - column: { name: stock_quantity, valueNumeric: 25 }
+              - column: { name: category, value: Telefonia }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: id, value: aaaaaaa3-aaaa-aaaa-aaaa-aaaaaaaaaaaa }
+              - column: { name: name, value: Mouse Logitech }
+              - column: { name: description, value: Wireless M280 }
+              - column: { name: price, valueNumeric: 120.00 }
+              - column: { name: stock_quantity, valueNumeric: 100 }
+              - column: { name: category, value: Periféricos }
+
+        - insert:
+            tableName: catalogs
+            columns:
+              - column: { name: id, value: ccccccc1-cccc-cccc-cccc-cccccccccccc }
+              - column: { name: name, value: Eletrônicos 2025 }
+
+        - insert:
+            tableName: catalogs
+            columns:
+              - column: { name: id, value: ccccccc2-cccc-cccc-cccc-cccccccccccc }
+              - column: { name: name, value: Ofertas de Verão }
+
+        - insert:
+            tableName: catalog_products
+            columns:
+              - column: { name: id, valueComputed: uuid_generate_v4() }
+              - column: { name: catalog_id, value: ccccccc1-cccc-cccc-cccc-cccccccccccc }
+              - column: { name: product_id, value: aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa }
+
+        - insert:
+            tableName: catalog_products
+            columns:
+              - column: { name: id, valueComputed: uuid_generate_v4() }
+              - column: { name: catalog_id, value: ccccccc1-cccc-cccc-cccc-cccccccccccc }
+              - column: { name: product_id, value: aaaaaaa2-aaaa-aaaa-aaaa-aaaaaaaaaaaa }
+
+        - insert:
+            tableName: catalog_products
+            columns:
+              - column: { name: id, valueComputed: uuid_generate_v4() }
+              - column: { name: catalog_id, value: ccccccc2-cccc-cccc-cccc-cccccccccccc }
+              - column: { name: product_id, value: aaaaaaa3-aaaa-aaaa-aaaa-aaaaaaaaaaaa }
+
+        - insert:
+            tableName: orders
+            columns:
+              - column: { name: id, value: ddddddd1-dddd-dddd-dddd-dddddddddddd }
+              - column: { name: client_id, value: 11111111-1111-1111-1111-111111111111 }
+              - column: { name: total_amount, valueNumeric: 4320.00 }
+              - column: { name: status, value: PAID }
+              - column: { name: created_at, valueDate: NOW() }
+
+        - insert:
+            tableName: orders
+            columns:
+              - column: { name: id, value: ddddddd2-dddd-dddd-dddd-dddddddddddd }
+              - column: { name: client_id, value: 22222222-2222-2222-2222-222222222222 }
+              - column: { name: total_amount, valueNumeric: 3620.00 }
+              - column: { name: status, value: PENDING }
+              - column: { name: created_at, valueDate: NOW() }
+
+        - insert:
+            tableName: order_items
+            columns:
+              - column: { name: order_id, value: ddddddd1-dddd-dddd-dddd-dddddddddddd }
+              - column: { name: product_id, value: aaaaaaa1-aaaa-aaaa-aaaa-aaaaaaaaaaaa }
+              - column: { name: product_name, value: Notebook Dell }
+              - column: { name: quantity, valueNumeric: 1 }
+              - column: { name: unit_price, valueNumeric: 4200.00 }
+              - column: { name: total_price, valueNumeric: 4200.00 }
+
+        - insert:
+            tableName: order_items
+            columns:
+              - column: { name: order_id, value: ddddddd1-dddd-dddd-dddd-dddddddddddd }
+              - column: { name: product_id, value: aaaaaaa3-aaaa-aaaa-aaaa-aaaaaaaaaaaa }
+              - column: { name: product_name, value: Mouse Logitech }
+              - column: { name: quantity, valueNumeric: 1 }
+              - column: { name: unit_price, valueNumeric: 120.00 }
+              - column: { name: total_price, valueNumeric: 120.00 }
+
+        - insert:
+            tableName: order_items
+            columns:
+              - column: { name: order_id, value: ddddddd2-dddd-dddd-dddd-dddddddddddd }
+              - column: { name: product_id, value: aaaaaaa2-aaaa-aaaa-aaaa-aaaaaaaaaaaa }
+              - column: { name: product_name, value: Smartphone Samsung }
+              - column: { name: quantity, valueNumeric: 1 }
+              - column: { name: unit_price, valueNumeric: 3500.00 }
+              - column: { name: total_price, valueNumeric: 3500.00 }
+
+        - insert:
+            tableName: order_items
+            columns:
+              - column: { name: order_id, value: ddddddd2-dddd-dddd-dddd-dddddddddddd }
+              - column: { name: product_id, value: aaaaaaa3-aaaa-aaaa-aaaa-aaaaaaaaaaaa }
+              - column: { name: product_name, value: Mouse Logitech }
+              - column: { name: quantity, valueNumeric: 1 }
+              - column: { name: unit_price, valueNumeric: 120.00 }
+              - column: { name: total_price, valueNumeric: 120.00 }
+
+        - insert:
+            tableName: payments
+            columns:
+              - column: { name: id, valueComputed: uuid_generate_v4() }
+              - column: { name: order_id, value: ddddddd1-dddd-dddd-dddd-dddddddddddd }
+              - column: { name: status, value: APPROVED }
+              - column: { name: method, value: CARTAO_CREDITO }
+              - column: { name: amount, valueNumeric: 4320.00 }
+              - column: { name: paid_at, valueDate: NOW() }
+
+        - insert:
+            tableName: payments
+            columns:
+              - column: { name: id, valueComputed: uuid_generate_v4() }
+              - column: { name: order_id, value: ddddddd2-dddd-dddd-dddd-dddddddddddd }
+              - column: { name: status, value: PENDING }
+              - column: { name: method, value: BOLETO }
+              - column: { name: amount, valueNumeric: 3620.00 }
+              - column: { name: paid_at, value: null }
+
+        - insert:
+            tableName: invoices
+            columns:
+              - column: { name: id, valueComputed: uuid_generate_v4() }
+              - column: { name: order_id, value: ddddddd1-dddd-dddd-dddd-dddddddddddd }
+              - column: { name: invoice_number, value: NF-2025-00001 }
+              - column: { name: generated_at, valueDate: NOW() }
+              - column: { name: total_amount, valueNumeric: 4320.00 }
+
+        - insert:
+            tableName: invoices
+            columns:
+              - column: { name: id, valueComputed: uuid_generate_v4() }
+              - column: { name: order_id, value: ddddddd2-dddd-dddd-dddd-dddddddddddd }
+              - column: { name: invoice_number, value: NF-2025-00002 }
+              - column: { name: generated_at, valueDate: NOW() }
+              - column: { name: total_amount, valueNumeric: 3620.00 }

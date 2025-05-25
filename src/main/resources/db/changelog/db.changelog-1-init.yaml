@@ -1,0 +1,356 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: antonio
+      changes:
+        - sql:
+            splitStatements: false
+            stripComments: true
+            sql: CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+  - changeSet:
+      id: 2
+      author: antonio
+      changes:
+        - createTable:
+            tableName: clients
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: TEXT
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: phone
+                  type: TEXT
+
+  - changeSet:
+      id: 3
+      author: antonio
+      changes:
+        - createTable:
+            tableName: addresses
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: client_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rua
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: numero
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cidade
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: estado
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cep
+                  type: TEXT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: addresses
+            baseColumnNames: client_id
+            referencedTableName: clients
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_client
+
+  - changeSet:
+      id: 4
+      author: antonio
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: price
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stock_quantity
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: TEXT
+
+  - changeSet:
+      id: 5
+      author: antonio
+      changes:
+        - createTable:
+            tableName: catalogs
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: TEXT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 6
+      author: antonio
+      changes:
+        - createTable:
+            tableName: catalog_products
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: catalog_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: catalog_products
+            baseColumnNames: catalog_id
+            referencedTableName: catalogs
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_catalog_product_catalog
+        - addForeignKeyConstraint:
+            baseTableName: catalog_products
+            baseColumnNames: product_id
+            referencedTableName: products
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_catalog_product_product
+
+  - changeSet:
+      id: 7
+      author: antonio
+      changes:
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: client_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_amount
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        - addForeignKeyConstraint:
+            baseTableName: orders
+            baseColumnNames: client_id
+            referencedTableName: clients
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_order_client
+
+  - changeSet:
+      id: 8
+      author: antonio
+      changes:
+        - createTable:
+            tableName: order_items
+            columns:
+              - column:
+                  name: order_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_name
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit_price
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_price
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: order_items
+            columnNames: order_id, product_id
+        - addForeignKeyConstraint:
+            baseTableName: order_items
+            baseColumnNames: order_id
+            referencedTableName: orders
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_order_item_order
+
+  - changeSet:
+      id: 9
+      author: antonio
+      changes:
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: order_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: method
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: paid_at
+                  type: TIMESTAMP
+        - addForeignKeyConstraint:
+            baseTableName: payments
+            baseColumnNames: order_id
+            referencedTableName: orders
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_payment_order
+
+  - changeSet:
+      id: 10
+      author: antonio
+      changes:
+        - createTable:
+            tableName: invoices
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: order_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: invoice_number
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: generated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: total_amount
+                  type: NUMERIC(12,2)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: invoices
+            columnNames: invoice_number
+            constraintName: uk_invoice_number
+        - addForeignKeyConstraint:
+            baseTableName: invoices
+            baseColumnNames: order_id
+            referencedTableName: orders
+            referencedColumnNames: id
+            onDelete: CASCADE
+            constraintName: fk_invoice_order

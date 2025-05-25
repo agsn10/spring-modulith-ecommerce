@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecommerce
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+  # Configuração para R2DBC (usado para operações reativas)
+  r2dbc:
+    username: user
+    password: password
+    url: r2dbc:postgresql://localhost:5432/ecommerce
+    pool:
+      initial-size: 5
+      max-size: 20
+      enabled: true
+  liquibase:
+    enabled: true
+    contexts: development  # ou production, ou ambos: development,production
+    url: jdbc:postgresql://localhost:5432/ecommerce
+    user: user
+    password: password
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    drop-first: true # irá apagar todas as tabelas do banco antes de aplicar os changeSets novamente
+
+  # Flyway para migrações de banco de dados
+#  flyway:
+#    enabled: true
+#    url: jdbc:postgresql://localhost:5432/ecommerce
+#    user: user
+#    password: new_password
+#    driver-class-name: org.postgresql.Driver
+    # Garante que o controle do Flyway possa começar em um banco já existente
+#    baseline-on-migrate: true
+    # Garante que as migrations não foram alteradas após aplicadas
+#    validate-on-migrate: true
+    # Garante que migrations fora de ordem não sejam aplicadas
+#    out-of-order: false
+#    locations: classpath:db/migration  # Caminho para as migrations do Flyway
+
+  # Habilite se houver erros, ajuda obter detalhes. Caso contrário, o console ficará muito "sujo"
+#logging:
+#  level:
+#    root: DEBUG
+#    org.springframework.web: DEBUG
+#    org.springdoc: DEBUG
+#    org.springframework.boot.autoconfigure: DEBUG
+#    reactor.netty: DEBUG
+#    org.springframework.web.reactive.function.client: DEBUG
+#    org.springframework.http.client.reactive: DEBUG
+#    io.netty: DEBUG
